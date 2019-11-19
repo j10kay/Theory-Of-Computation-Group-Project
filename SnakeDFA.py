@@ -37,7 +37,7 @@ class FireManager(Layer):
         self.view_width = view_width
         self.goodies = []
         self.batch = pyglet.graphics.Batch()
-        self.fimg = pyglet.resource.image('blackscreen.jpg')
+        self.fimg = pyglet.resource.image('resources\\grasspatch.jpg')
         self.group = pyglet.sprite.SpriteGroup(self.fimg,
                                                blend_src=GL_SRC_ALPHA, blend_dest=GL_ONE)
         self.vertex_list = self.batch.add(4 * num, GL_QUADS, self.group,
@@ -91,8 +91,8 @@ class SpriteLayer(Layer):
     def __init__(self):
         super(SpriteLayer, self).__init__()
 
-        sprite2 = Sprite('snake_start.jpg')
-        sprite3 = Sprite('snake_start.jpg')
+        sprite2 = Sprite('resources\\snake_start.png')
+        sprite3 = Sprite('resources\\snake_start.png')
 
         sprite2.position = (620, 100)
         sprite3.position = (20, 100)
@@ -125,7 +125,7 @@ class Problem(Layer):
 						  ('aabb', True), ('bbabab', True), ('baaabb', True)],
 					'3': [('1', False), ('10', False), ('101', True), ('11', False), 
 					      ('0', False), ('100', False), ('1101010', False), ('101000', True), 
-					      ('1010', True), ('1010101', True), ('10001', True)],
+					      ('1010', True), ('1010101', True), ('10001', False)],
                     '4': [('abb', True), ('babbaabb', True), ('a', False), ('ab', False), 
 					      ('aa', False), ('abba', False), ('aaa', False), ('ababb', True), 
 					      ('abab', False), ('aabaaab', True), ('aabb', True), ('bbbababb', True), ('abbaabb', True)],
@@ -152,9 +152,9 @@ class Problem(Layer):
 		current_dfa = random.randint(1, len(self.dfa))
 		current_problem = self.dfa[str(current_dfa)][random.randint(0,len(self.dfa[str(current_dfa)]) - 1)]
 		
-		dfa_sprite = Sprite(str(current_dfa) + '.png')
-		input_str = Sprite(str(current_dfa) + '_' + str(current_problem[0]) + '.png')
-        #question_str = Sprite(question.PNG)
+		dfa_sprite = Sprite('resources\\' + str(current_dfa) + '.png')
+		input_str = Sprite('resources\\' + str(current_dfa) + '_' + str(current_problem[0]) + '.png')
+		question_str = Sprite('resources\\question.png')
 		self.accepted = current_problem[1]
 		# resize and scale sprites accordingly (also position)
 		
@@ -162,11 +162,12 @@ class Problem(Layer):
 		# create sprite to ask the user a question
 		# "Will the DFA accept or reject the input string?"
         #question_str.position = 160 //2, 120 // 2
-		input_str.position = 160 // 2, 240 // 2
+		question_str.position = 160 // 2, (120 + 240) // 2
+		input_str.position = 160 // 2, 120 // 2
 		
 		self.add(dfa_sprite)
 		self.add(input_str)
-        #self.add(question_str)
+		self.add(question_str)
 
 class Sound():
 	def __init__(self):
@@ -185,7 +186,7 @@ class GameLayer(Layer):
 		# add background layer
 		super(GameLayer, self).__init__()
 		size = director.get_window_size()
-		backgroundSprite = Sprite('background.jpg')
+		backgroundSprite = Sprite('resources\\background.jpg')
 		backgroundSprite.position = (size[0] / 2, size[1] / 2)
 		sc = ScaleBy(2, 0)
 		backgroundSprite.do(sc)
@@ -205,7 +206,7 @@ class Snake(Layer):
 		# to keep track of whether snake is dead or not
 		# self.game_over = False
 		# initialize here for difficulty
-		self.head = Sprite('resized_body.png')
+		self.head = Sprite('resources\\head.png')
 		self.head.scale = 0.05
 		self.head.new_dir = None
 		self.head.old_dir = None
@@ -220,11 +221,11 @@ class Snake(Layer):
 		self.add(self.problem)
 		
 		# do food
-		self.yes_apple = Sprite('resized_accept_apple.jpg')
-		self.no_apple = Sprite('resized_reject_apple.jpg')
+		self.yes_apple = Sprite('resources\\resized_accept_apple.png')
+		self.no_apple = Sprite('resources\\resized_reject_apple.png')
 		
-		self.yes_apple.scale = 0.05
-		self.no_apple.scale = 0.05
+		self.yes_apple.scale = 0.035
+		self.no_apple.scale = 0.035
 		
 		self.add(self.yes_apple)
 		self.add(self.no_apple)
@@ -237,7 +238,7 @@ class Snake(Layer):
 		self.score = 0
 		# show score board at the bottom left
 		
-		self.schedule_interval(self.update, 0.25)
+		self.schedule_interval(self.update, 0.15)
 		
 	def generate_apples(self):
 		# this is for making sure the apples do not spawn inside the snake
@@ -258,7 +259,7 @@ class Snake(Layer):
 	
 	def eat_apple(self):
 		# create a new body and set the position to the previous last body partition
-		new_snake_body = Sprite('resized_body.png')
+		new_snake_body = Sprite('resources\\resized_body.png')
 		new_snake_body.position = self.body[-1].position
 		new_snake_body.scale = 0.05
 		# now, we can update the positions accordingly
