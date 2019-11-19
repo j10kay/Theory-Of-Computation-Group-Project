@@ -1,0 +1,11 @@
+		self.dfa = {'1': [('1010', True), ('010', True), ('10000', False),
+						  ('0', False), ('01', False), ('000', True), ('1111', True),
+						  ('11', True), ('10', False), ('01111', False), ('100', False),
+						  ('011001', True), ('01010101', True), ('1000010', True)],
+					'2': [('b', True), ('a', False), ('aa', False), ('aba', True), 
+						  ('baa', False), ('bbbaa', False), ('bbbaaa', True), ('ba', True), 
+						  ('aabb', True), ('bbabab', True), ('baaabb', True)],
+					'3': [('1', False), ('10', False), ('101', True), ('11', False), 
+					      ('0', False), ('100', False), ('1101010', False), ('101000', True), 
+					      ('1010', True), ('1010101', True), ('10001', True)]
+					}
