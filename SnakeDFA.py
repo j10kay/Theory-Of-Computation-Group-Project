@@ -134,7 +134,7 @@ class Problem(Layer):
 					      ('babbabb', True), ('abbabb', True)],
                     '6': [('01', True), ('0011', True), ('11', True), ('10', False), 
 					      ('101', False), ('10100', False), ('100110', False), ('1101001', False), 
-					      ('1010', False), ('01010', False), ('100101', True), ('0010001', True), ('10110011', True)],
+					      ('1010', False), ('01010', False), ('100101', True), ('001001', True), ('10110011', True)],
                     '7': [('aaa', False), ('baba', True), ('abaa', False), ('bbaa', True), 
 					      ('ababa', False), ('ab', False), ('bbb', False), ('bbbbbaa', True), 
 					      ('aaababab', False), ('aabb', True), ('bbbabab', True), ('abbbab', True)],
