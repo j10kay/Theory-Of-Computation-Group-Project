@@ -91,8 +91,8 @@ class SpriteLayer(Layer):
     def __init__(self):
         super(SpriteLayer, self).__init__()
 
-        sprite2 = Sprite('snake.jpg')
-        sprite3 = Sprite('snake.jpg')
+        sprite2 = Sprite('snake_start.jpg')
+        sprite3 = Sprite('snake_start.jpg')
 
         sprite2.position = (620, 100)
         sprite3.position = (20, 100)
@@ -116,9 +116,34 @@ class Problem(Layer):
 	def __init__(self):
 		super(Problem, self).__init__()
 		
-		self.dfa = {'1': [('1010', True), ('010', True), ('10000', False)],
-					'2': [('b', True), ('a', False), ('aa', False)],
-					'3': [('1', False), ('10', False), ('101', True)]
+		self.dfa = {'1': [('1010', True), ('010', True), ('10000', False),
+						  ('0', False), ('01', False), ('000', True), ('1111', True),
+						  ('11', True), ('10', False), ('01111', False), ('100', False),
+						  ('011001', True), ('01010101', True), ('1000010', True)],
+					'2': [('b', True), ('a', False), ('aa', False), ('aba', True), 
+						  ('baa', False), ('bbbaa', False), ('bbbaaa', True), ('ba', True), 
+						  ('aabb', True), ('bbabab', True), ('baaabb', True)],
+					'3': [('1', False), ('10', False), ('101', True), ('11', False), 
+					      ('0', False), ('100', False), ('1101010', False), ('101000', True), 
+					      ('1010', True), ('1010101', True), ('10001', True)],
+                    '4': [('abb', True), ('babbaabb', True), ('a', False), ('ab', False), 
+					      ('aa', False), ('abba', False), ('aaa', False), ('ababb', True), 
+					      ('abab', False), ('aabaaab', True), ('aabb', True), ('bbbababb', True), ('abbaabb', True)],
+                    '5': [('ab', False), ('abaa', False), ('abba', False), ('abaaaba', False), 
+					      ('aabaa', False), ('ababbb', True), ('babbbabb', True), ('abab', True), 
+					      ('babbabb', True), ('abbabb', True)],
+                    '6': [('01', True), ('0011', True), ('11', True), ('10', False), 
+					      ('101', False), ('10100', False), ('100110', False), ('1101001', False), 
+					      ('1010', False), ('01010', False), ('100101', True), ('0010001', True), ('10110011', True)],
+                    '7': [('aaa', False), ('baba', True), ('abaa', False), ('bbaa', True), 
+					      ('ababa', False), ('ab', False), ('bbb', False), ('bbbbbaa', True), 
+					      ('aaababab', False), ('aabb', True), ('bbbabab', True), ('abbbab', True)],
+                    '8': [('a', True), ('bb', True), ('ab', False), ('aab', True), 
+					      ('abab', False), ('bba', True), ('abbb', False), ('bbab', False), 
+					      ('aaabb', True), ('babbaba', False), ('aaabba', True), ('bbbabbbb', True), ('aababbaa', True)],
+                    '9': [('1', False), ('00', False), ('01', True), ('10', True), 
+					      ('0001', False), ('1000', False), ('11011', False), ('10001', True), 
+					      ('101001', True), ('110100110', True), ('000101001', True)]
 					}
 		
 		self.new_problem()
@@ -127,18 +152,21 @@ class Problem(Layer):
 		current_dfa = random.randint(1, len(self.dfa))
 		current_problem = self.dfa[str(current_dfa)][random.randint(0,len(self.dfa[str(current_dfa)]) - 1)]
 		
-		dfa_sprite = Sprite(str(current_dfa) + '.jpg')
-		input_str = Sprite(str(current_dfa) + '_' + str(current_problem[0]) + '.jpg')
+		dfa_sprite = Sprite(str(current_dfa) + '.png')
+		input_str = Sprite(str(current_dfa) + '_' + str(current_problem[0]) + '.png')
+        #question_str = Sprite(question.PNG)
 		self.accepted = current_problem[1]
 		# resize and scale sprites accordingly (also position)
 		
 		dfa_sprite.position = 160 // 2, 240 + 240 // 2
 		# create sprite to ask the user a question
 		# "Will the DFA accept or reject the input string?"
+        #question_str.position = 160 //2, 120 // 2
 		input_str.position = 160 // 2, 240 // 2
 		
 		self.add(dfa_sprite)
 		self.add(input_str)
+        #self.add(question_str)
 
 class Sound():
 	def __init__(self):
@@ -148,19 +176,6 @@ class Sound():
 		bgmlooper.loop = True
 		bgmlooper.queue(bgm)
 		self.player.queue(bgmlooper)
-		
-	def BGM_play(self, play=False):
-		if play:
-			self.player.play()
-		else:
-			self.player.pause()
-	
-	def gameover(self):
-		self.player.pause()
-		pyglet.media.load('gameover.mp3').play()
-	
-	def consume(self):
-		pyglet.media.load('consume.mp3').play()
 
 class GameLayer(Layer):
 	# this is for taking in keyboard input on press
@@ -170,7 +185,7 @@ class GameLayer(Layer):
 		# add background layer
 		super(GameLayer, self).__init__()
 		size = director.get_window_size()
-		backgroundSprite = Sprite('grasspatch.jpg')
+		backgroundSprite = Sprite('background.jpg')
 		backgroundSprite.position = (size[0] / 2, size[1] / 2)
 		sc = ScaleBy(2, 0)
 		backgroundSprite.do(sc)
@@ -190,7 +205,7 @@ class Snake(Layer):
 		# to keep track of whether snake is dead or not
 		# self.game_over = False
 		# initialize here for difficulty
-		self.head = Sprite('snake.jpg')
+		self.head = Sprite('resized_body.png')
 		self.head.scale = 0.05
 		self.head.new_dir = None
 		self.head.old_dir = None
@@ -205,8 +220,8 @@ class Snake(Layer):
 		self.add(self.problem)
 		
 		# do food
-		self.yes_apple = Sprite('yes_apple.jpg')
-		self.no_apple = Sprite('no_apple.jpg')
+		self.yes_apple = Sprite('resized_accept_apple.jpg')
+		self.no_apple = Sprite('resized_reject_apple.jpg')
 		
 		self.yes_apple.scale = 0.05
 		self.no_apple.scale = 0.05
@@ -217,9 +232,6 @@ class Snake(Layer):
 		self.generate_apples()
 		
 		# do music
-		
-		#self.music = Sound()
-		#self.music.BGM_play(True)
 		
 		# do score
 		self.score = 0
@@ -246,7 +258,7 @@ class Snake(Layer):
 	
 	def eat_apple(self):
 		# create a new body and set the position to the previous last body partition
-		new_snake_body = Sprite('body.jpg')
+		new_snake_body = Sprite('resized_body.png')
 		new_snake_body.position = self.body[-1].position
 		new_snake_body.scale = 0.05
 		# now, we can update the positions accordingly
@@ -436,33 +448,6 @@ def start():
     menulayer = MultiplexLayer(MainMenu(), OptionMenu(), ScoreMenu())
 
     scene = Scene(firelayer, spritelayer, menulayer)
-
-    twirl_normal = Twirl(center=(320, 240), grid=(16, 12), duration=15, twirls=6, amplitude=6)
-    twirl = AccelDeccelAmplitude(twirl_normal, rate=4.0)
-    lens = Lens3D(radius=240, center=(320, 240), grid=(32, 24), duration=5)
-    waves3d = AccelDeccelAmplitude(
-        Waves3D(waves=18, amplitude=80, grid=(32, 24), duration=15), rate=4.0)
-    flipx = FlipX3D(duration=1)
-    flipy = FlipY3D(duration=1)
-    flip = Flip(duration=1)
-    liquid = Liquid(grid=(16, 12), duration=4)
-    ripple = Ripple3D(grid=(32, 24), waves=7, duration=10, amplitude=100, radius=320)
-    shakyt = ShakyTiles3D(grid=(16, 12), duration=3)
-    corners = CornerSwap(duration=1)
-    waves = AccelAmplitude(Waves(waves=8, amplitude=50, grid=(32, 24), duration=5), rate=2.0)
-    shaky = Shaky3D(randrange=10, grid=(32, 24), duration=5)
-    quadmove = QuadMoveBy(
-        delta0=(320, 240), delta1=(-630, 0), delta2=(-320, -240), delta3=(630, 0), duration=2)
-    fadeout = FadeOutTRTiles(grid=(16, 12), duration=2)
-    cornerup = MoveCornerUp(duration=1)
-    cornerdown = MoveCornerDown(duration=1)
-    shatter = ShatteredTiles3D(randrange=16, grid=(16, 12), duration=4)
-    shuffle = ShuffleTiles(grid=(16, 12), duration=1)
-    orbit = OrbitCamera(
-        radius=1, delta_radius=2, angle_x=0, delta_x=-90, angle_z=0, delta_z=180, duration=4)
-    jumptiles = JumpTiles3D(jumps=2, duration=4, amplitude=80, grid=(16, 12))
-    wavestiles = WavesTiles3D(waves=3, amplitude=60, duration=8, grid=(16, 12))
-    turnoff = TurnOffTiles(grid=(16, 12), duration=2)
 
 #    firelayer.do(
 #    spritelayer.do(
