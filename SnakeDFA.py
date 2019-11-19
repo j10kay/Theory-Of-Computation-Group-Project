@@ -154,7 +154,7 @@ class Problem(Layer):
 		
 		dfa_sprite = Sprite('resources\\' + str(current_dfa) + '.png')
 		input_str = Sprite('resources\\' + str(current_dfa) + '_' + str(current_problem[0]) + '.png')
-		question_str = Sprite('resources\\question.png')
+		question_str = Sprite('resources\\question_for_user.png')
 		self.accepted = current_problem[1]
 		# resize and scale sprites accordingly (also position)
 		
