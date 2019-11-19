@@ -121,21 +121,24 @@ class Problem(Layer):
 					'3': [('1', False), ('10', False), ('101', True)]
 					}
 		
-		self.current_dfa = random.randint(1, len(self.dfa))
-		self.current_problem = self.dfa[str(self.current_dfa)][random.randint(0,len(self.dfa[str(self.current_dfa)]) - 1)]
-		
-		self.dfa_sprite = Sprite(str(self.current_dfa) + '.jpg')
-		self.input_str = Sprite(str(self.current_dfa) + '_' + str(self.current_problem[0]) + '.jpg')
-		self.accepted = self.current_problem[1]
-		# resize and scale sprites accordingly (also position)
+		self.new_problem()
 		
 	def new_problem(self):
-		self.current_dfa = random.randint(1, len(self.dfa))
-		self.current_problem = self.dfa[str(self.current_dfa)][random.randint(0,len(self.dfa[str(self.current_dfa)]) - 1)]
+		current_dfa = random.randint(1, len(self.dfa))
+		current_problem = self.dfa[str(current_dfa)][random.randint(0,len(self.dfa[str(current_dfa)]) - 1)]
 		
-		self.dfa_sprite = Sprite(str(self.current_dfa) + '.jpg')
-		self.input_str = Sprite(str(self.current_dfa) + '_' + str(self.current_problem[0]) + '.jpg')
-		self.accepted = self.current_problem[1]
+		dfa_sprite = Sprite(str(current_dfa) + '.jpg')
+		input_str = Sprite(str(current_dfa) + '_' + str(current_problem[0]) + '.jpg')
+		self.accepted = current_problem[1]
+		# resize and scale sprites accordingly (also position)
+		
+		dfa_sprite.position = 160 // 2, 240 + 240 // 2
+		# create sprite to ask the user a question
+		# "Will the DFA accept or reject the input string?"
+		input_str.position = 160 // 2, 240 // 2
+		
+		self.add(dfa_sprite)
+		self.add(input_str)
 
 class Sound():
 	def __init__(self):
@@ -180,7 +183,7 @@ class GameLayer(Layer):
 	def on_key_press(self, key, modifiers):
 		self.snake.key_pressed(key)
 		
-class Snake(CocosNode):
+class Snake(Layer):
 	def __init__(self):
 		super(Snake, self).__init__()
 		self.size = (640, 480)
@@ -199,6 +202,7 @@ class Snake(CocosNode):
 		
 		# show problem
 		self.problem = Problem()
+		self.add(self.problem)
 		
 		# do food
 		self.yes_apple = Sprite('yes_apple.jpg')
@@ -221,7 +225,7 @@ class Snake(CocosNode):
 		self.score = 0
 		# show score board at the bottom left
 		
-		self.schedule_interval(self.update, 0.1)
+		self.schedule_interval(self.update, 0.25)
 		
 	def generate_apples(self):
 		# this is for making sure the apples do not spawn inside the snake
