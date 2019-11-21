@@ -13,4 +13,6 @@ Then, the user will use the movement keys (‘up’, ‘down’, ‘left’, ‘
 
 Initial Proposal of the project: https://docs.google.com/document/d/1K60YwKrfvqrP3d40oHfeEw6SISln_mV1_JSzobbbPR8/edit?usp=sharing 
 
+Final Report of the project: https://docs.google.com/document/d/12EwDSfo5W6AAdHQi-myfmOL5o09i9h4YZOeWrgsmxWM/edit?usp=sharing 
+
 Resources (DFAs and input strings) https://docs.google.com/document/d/1XgSmDJglYTdrCPctSxGM8awohoilA12ZGthmOsGij0o/edit?usp=sharing 
